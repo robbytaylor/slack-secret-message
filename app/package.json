@@ -10,7 +10,7 @@
     "type": "git",
     "url": "github.com:robbytaylor/slack-encrypted-message"
   },
-  "author": "",
+  "author": "Rob Taylor (http://www.github.com/robbytaylor)",
   "license": "MIT",
   "dependencies": {
     "@slack/bolt": "^1.4.1",
