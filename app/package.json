@@ -11,5 +11,9 @@
     "url": "github.com:robbytaylor/slack-encrypted-message"
   },
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@slack/bolt": "^1.4.1",
+    "jsonwebtoken": "^8.5.1"
+  }
 }
