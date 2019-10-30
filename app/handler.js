@@ -1,8 +1,14 @@
-const { App } = require('@slack/bolt');
+'use strict';
+
+const { App, ExpressReceiver } = require('@slack/bolt');
+
+const expressReceiver = new ExpressReceiver({
+  signingSecret: process.env.SLACK_SIGNING_SECRET
+});
 
 const app = new App({
-  signingSecret: process.env.SLACK_SIGNING_SECRET,
   token: process.env.SLACK_BOT_TOKEN,
+  receiver: expressReceiver
 });
 
 app.command('/encrypted-message', ({ ack, payload, context }) => {
@@ -74,17 +80,9 @@ app.action('send_message', ({ ack, payload, context, say }) => {
   });
 });
 
-app.action('view_message', ({ ack, payload, context }) => {
-  ack();
+const awsServerlessExpress = require('aws-serverless-express');
+const server = awsServerlessExpress.createServer(app);
 
-  app.client.views.open({
-    token: context.botToken,
-    trigger_id: payload.trigger_id,
-    view: {
-    }
-  });
-});
-
-(async () => {
-  await app.start(process.env.PORT || 3000);
-})();
+module.exports.app = (event, context) => {
+  awsServerlessExpress.proxy(server, event, context);
+}
