@@ -4,3 +4,8 @@ locals {
   slack_bot_token      = local.slack_credentials["SLACK_BOT_TOKEN"]
   slack_signing_secret = local.slack_credentials["SLACK_SIGNING_SECRET"]
 }
+
+variable lambda_function_name {
+  type    = string
+  default = "slack-sharelock"
+}

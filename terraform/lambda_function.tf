@@ -7,7 +7,7 @@ data "archive_file" "slack-sharelock" {
 
 resource "aws_lambda_function" "lambda" {
   filename      = data.archive_file.slack-sharelock.output_path
-  function_name = "slack-sharelock"
+  function_name = var.lambda_function_name
   role          = aws_iam_role.slack-sharelock.arn
   handler       = "handler.app"
   runtime       = "nodejs10.x"
@@ -20,4 +20,9 @@ resource "aws_lambda_function" "lambda" {
       "SLACK_BOT_TOKEN" : local.slack_bot_token
     }
   }
+}
+
+resource "aws_cloudwatch_log_group" "logs" {
+  name              = "/aws/lambda/${var.lambda_function_name}"
+  retention_in_days = 7
 }
