@@ -18,6 +18,7 @@ resource "aws_lambda_function" "lambda" {
     variables = {
       "SLACK_SIGNING_SECRET" : local.slack_signing_secret
       "SLACK_BOT_TOKEN" : local.slack_bot_token
+      "SLACK_OAUTH_TOKEN" : local.slack_oauth_token
     }
   }
 }

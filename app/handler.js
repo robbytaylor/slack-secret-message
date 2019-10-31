@@ -1,6 +1,7 @@
 'use strict';
 
 const { App, ExpressReceiver } = require('@slack/bolt');
+const axios = require('axios');
 
 const expressReceiver = new ExpressReceiver({
   signingSecret: process.env.SLACK_SIGNING_SECRET
@@ -11,77 +12,104 @@ const app = new App({
   receiver: expressReceiver
 });
 
-app.error((error) => {
-  console.error(error);
-});
-
 app.command('/encrypted-message', ({ ack, payload, context }) => {
-  ack();
-
-  console.log(payload, context);
-
-  // Figure out who we're sending the message to.
-  // In a direct message this will be the person being messaged.
-  // For a channel get the users in the channel and show a dropdown to select a user.
-
-  app.client.views.open({
-    token: context.botToken,
-    trigger_id: context.trigger_id,
-    view: {
-      type: 'modal',
-      callback_id: 'send_message',
-      title: {
-        type: 'plain_text',
-        text: 'Send an encrypted message'
-      },
-      blocks: [
-        {
-          type: 'input',
-          block_id: 'mesage',
-          element: {
-            type: 'plain_text_input',
-            action_id: 'message_input',
-            multiline: true,
-
+  app.client.views
+    .open({
+      token: context.botToken,
+      trigger_id: payload.trigger_id,
+      view: {
+        type: 'modal',
+        callback_id: 'send_message',
+        title: {
+          type: 'plain_text',
+          text: 'Encrypted message'
+        },
+        blocks: [
+          {
+            type: 'input',
+            block_id: 'users',
+            label: {
+              type: 'plain_text',
+              text: 'Pick users from the list'
+            },
+            element: {
+              action_id: 'user_select',
+              type: 'users_select',
+              placeholder: {
+                type: 'plain_text',
+                text: 'Select users'
+              }
+            }
+          },
+          {
+            type: 'input',
+            block_id: 'message',
+            label: {
+              type: 'plain_text',
+              text: 'hello'
+            },
+            element: {
+              type: 'plain_text_input',
+              action_id: 'message_input',
+              multiline: true
+            }
           }
+        ],
+        submit: {
+          type: 'plain_text',
+          text: 'Send'
         }
-      ],
-      submit: {
-        type: 'plain_text',
-        text: 'Send'
       }
-    }
+    })
+    .then(() => ack());
+});
+
+app.view('send_message', ({ ack, body, view, context }) => {
+  const userId = view.state.values.users.user_select.selected_user;
+  const message = view.state.values.message.message_input.value;
+
+  app.client.token = process.env.SLACK_OAUTH_TOKEN;
+
+  app.client.users.profile.get({user: userId})
+    .then(result => {
+      axios
+        .post('https://sharelock.io/create', {
+          a: result.profile.email,
+          d: message
+        })
+        .then(response => {
+          const url = 'https://sharelock.io' + response.data;
+
+          app.client.chat
+            .postMessage({
+              channel: userId,
+              token: context.botToken,
+              blocks: [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "plain_text",
+                    "text": `<@${body.user.name}> has sent you an encrypted message`
+                  },
+                  "accessory": {
+                    "type": "button",
+                    "action_id": "url_visit",
+                    "text": {
+                      "type": "plain_text",
+                      "text": "View message"
+                    },
+                    "url": url
+                  }
+              }
+              ]
+            })
+            .then(() => ack());
+        });
   });
 });
 
-app.action('send_message', ({ ack, payload, context, say }) => {
+app.event('url_visit', ({ ack }) => {
   ack();
-
-  console.log(payload, context);
-
-  // Query the Slack API to get an email address for the target user.
-  // Send to sharelock to get a URL for the share.
-  // For now, just send the message.
-
-  // Send a message to the target user telling them that <usernmae> wants to send them an encrypted message
-  say({
-    channel: '', // Target user ID
-    blocks: [{
-      "type": "section",
-      "text": {
-        "type": "plain_text",
-        "text": `${payload.user} has sent you an encrypted message`
-      },
-      "accessory": {
-        "type": "button",
-        "text": {
-          "type": "plain_text",
-          "text": "View message"
-        },
-        "action_id": "view_message"
-      }
-    }]
-  });
 });
 
 module.exports.app = require('serverless-http')(expressReceiver.app);
