@@ -11,6 +11,10 @@ const app = new App({
   receiver: expressReceiver
 });
 
+app.error((error) => {
+  console.error(error);
+});
+
 app.command('/encrypted-message', ({ ack, payload, context }) => {
   ack();
 
@@ -22,7 +26,7 @@ app.command('/encrypted-message', ({ ack, payload, context }) => {
 
   app.client.views.open({
     token: context.botToken,
-    trigger_id: payload.trigger_id,
+    trigger_id: context.trigger_id,
     view: {
       type: 'modal',
       callback_id: 'send_message',
@@ -80,9 +84,4 @@ app.action('send_message', ({ ack, payload, context, say }) => {
   });
 });
 
-const awsServerlessExpress = require('aws-serverless-express');
-const server = awsServerlessExpress.createServer(app);
-
-module.exports.app = (event, context) => {
-  awsServerlessExpress.proxy(server, event, context);
-}
+module.exports.app = require('serverless-http')(expressReceiver.app);
