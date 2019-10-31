@@ -8,5 +8,5 @@ locals {
 
 variable lambda_function_name {
   type    = string
-  default = "slack-sharelock"
+  default = "slack-secret-message"
 }
