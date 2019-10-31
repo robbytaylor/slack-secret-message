@@ -1,4 +1,4 @@
-data "archive_file" "slack-sharelock" {
+data "archive_file" "slack-secret-message" {
   type        = "zip"
   source_dir  = "${path.root}/../app"
   output_path = "${path.root}/../dist/lambda.zip"
@@ -6,13 +6,13 @@ data "archive_file" "slack-sharelock" {
 
 
 resource "aws_lambda_function" "lambda" {
-  filename      = data.archive_file.slack-sharelock.output_path
+  filename      = data.archive_file.slack-secret-message.output_path
   function_name = var.lambda_function_name
-  role          = aws_iam_role.slack-sharelock.arn
+  role          = aws_iam_role.slack-secret-message.arn
   handler       = "handler.app"
   runtime       = "nodejs10.x"
 
-  source_code_hash = data.archive_file.slack-sharelock.output_base64sha256
+  source_code_hash = data.archive_file.slack-secret-message.output_base64sha256
 
   environment {
     variables = {
