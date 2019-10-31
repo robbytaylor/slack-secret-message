@@ -10,8 +10,14 @@ resource "aws_lambda_function" "lambda" {
   function_name = "slack-sharelock"
   role          = aws_iam_role.slack-sharelock.arn
   handler       = "handler.app"
+  runtime       = "nodejs10.x"
 
   source_code_hash = data.archive_file.slack-sharelock.output_base64sha256
 
-  runtime = "nodejs10.x"
+  environment {
+    variables = {
+      "SLACK_SIGNING_SECRET" : local.slack_signing_secret
+      "SLACK_BOT_TOKEN" : local.slack_bot_token
+    }
+  }
 }
