@@ -12,7 +12,9 @@ const app = new App({
   receiver: expressReceiver
 });
 
-app.command('/encrypted-message', ({ ack, payload, context }) => {
+const command = process.env.COMMAND || 'secret-message';
+
+app.command(`/${command}`, ({ ack, payload, context }) => {
   app.client.views
     .open({
       token: context.botToken,
