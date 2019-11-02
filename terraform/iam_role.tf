@@ -1,5 +1,5 @@
-resource "aws_iam_role" "slack-secret-message" {
-  name = "SlackSecretMessage"
+resource "aws_iam_role" "lambda" {
+  name = "LambdaFunctionRole-${var.lambda_function_name}"
 
   assume_role_policy = <<EOF
 {
@@ -32,11 +32,11 @@ data "aws_iam_policy_document" "lambda" {
 }
 
 resource "aws_iam_policy" "lambda" {
-  name   = "SlackSecretMessageLambdaLogging"
+  name   = "LambdaFunctionLogginPolicy-${var.lambda_function_name}"
   policy = data.aws_iam_policy_document.lambda.json
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_logs" {
-  role       = aws_iam_role.slack-secret-message.name
+  role       = aws_iam_role.lambda.name
   policy_arn = aws_iam_policy.lambda.arn
 }

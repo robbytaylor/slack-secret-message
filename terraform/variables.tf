@@ -11,7 +11,17 @@ variable api_name {
 }
 
 variable lambda_function_name {
+  type = string
+}
+
+variable lambda_handler {
   type    = string
+  default = "handler.app"
+}
+
+variable lambda_runtime {
+  type    = string
+  default = "nodejs10.x"
 }
 
 variable route53_hosted_zone {
