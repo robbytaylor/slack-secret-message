@@ -22,49 +22,7 @@ app.command(`/${command}`, ({ ack, payload, context }) => {
     .open({
       token: context.botToken,
       trigger_id: payload.trigger_id,
-      view: {
-        type: 'modal',
-        callback_id: send_message_callback,
-        title: {
-          type: 'plain_text',
-          text: 'Send a secret message'
-        },
-        blocks: [
-          {
-            type: 'input',
-            block_id: 'users',
-            label: {
-              type: 'plain_text',
-              text: 'Pick a recipient from the list'
-            },
-            element: {
-              action_id: 'user_select',
-              type: 'users_select',
-              placeholder: {
-                type: 'plain_text',
-                text: 'Select user'
-              }
-            }
-          },
-          {
-            type: 'input',
-            block_id: 'message',
-            label: {
-              type: 'plain_text',
-              text: 'Enter your message'
-            },
-            element: {
-              type: 'plain_text_input',
-              action_id: 'message_input',
-              multiline: true
-            }
-          }
-        ],
-        submit: {
-          type: 'plain_text',
-          text: 'Send message'
-        }
-      }
+      view: view_source()
     })
     .then(() => ack());
 });
@@ -77,9 +35,20 @@ app.view(send_message_callback, ({ ack, body, view, context }) => {
 
   app.client.users.profile.get({user: userId})
     .then(result => {
+      const profile = result.profile;
+
+      if (profile.bot_id) {
+        return view_error(ack, "I can't send a secret message to a bot. Please select another user.");
+      }
+
+      if (!profile.email) {
+        // This should never happen, but just in case we can't get an email address for this user for any other reason
+        return view_error(ack, "I couldn't find the email address for that person");
+      }
+
       axios
         .post(`${sharelock_base_path}/create`, {
-          a: result.profile.email,
+          a: profile.email,
           d: message
         })
         .then(response => {
@@ -94,7 +63,7 @@ app.view(send_message_callback, ({ ack, body, view, context }) => {
                   type: 'section',
                   text: {
                     type: 'plain_text',
-                    text: `<@${body.user.name}> has sent you a secret message`
+                    text: `<@${body.user.name}> has sent you a secret message.`
                   },
                   accessory: {
                     type: 'button',
@@ -105,10 +74,15 @@ app.view(send_message_callback, ({ ack, body, view, context }) => {
                     },
                     url: url
                   }
-              }
+                }
               ]
             })
             .then(() => ack());
+        })
+        .catch(error => {
+          console.error(error);
+
+          view_error(ack, 'Sorry, there was an error when I tried to encrypt your message.');
         });
   });
 });
@@ -116,5 +90,72 @@ app.view(send_message_callback, ({ ack, body, view, context }) => {
 app.event(url_visit_callback, ({ ack }) => {
   ack();
 });
+
+const view_error = (ack, error) => {
+  console.log(view_source(error));
+
+  return ack({
+    response_action: 'update',
+    view: view_source(error)
+  });
+}
+
+const view_source = (error = "") => {
+  const blocks = [
+    {
+      type: 'input',
+      block_id: 'users',
+      label: {
+        type: 'plain_text',
+        text: 'Pick a recipient from the list'
+      },
+      element: {
+        action_id: 'user_select',
+        type: 'users_select',
+        placeholder: {
+          type: 'plain_text',
+          text: 'Select user'
+        }
+      }
+    },
+    {
+      type: 'input',
+      block_id: 'message',
+      label: {
+        type: 'plain_text',
+        text: 'Enter your message'
+      },
+      element: {
+        type: 'plain_text_input',
+        action_id: 'message_input',
+        multiline: true
+      }
+    }
+  ];
+
+  if (error !== "") {
+    blocks.unshift({
+      type: 'section',
+      text: {
+        type: 'mrkdwn',
+        text: `*${error}*`
+      }
+    });
+  }
+
+  return {
+    type: 'modal',
+    callback_id: send_message_callback,
+    title: {
+      type: 'plain_text',
+      text: 'Send a secret message'
+    },
+    blocks: blocks,
+    submit: {
+      type: 'plain_text',
+      text: 'Send message'
+    }
+  };
+}
 
 module.exports.app = require('serverless-http')(expressReceiver.app);
