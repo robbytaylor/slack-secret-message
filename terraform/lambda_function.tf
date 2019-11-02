@@ -4,7 +4,6 @@ data "archive_file" "slack-secret-message" {
   output_path = "${path.root}/../dist/lambda.zip"
 }
 
-
 resource "aws_lambda_function" "lambda" {
   filename      = data.archive_file.slack-secret-message.output_path
   function_name = var.lambda_function_name

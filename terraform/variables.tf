@@ -6,7 +6,25 @@ locals {
   slack_oauth_token    = local.slack_credentials["SLACK_OAUTH_TOKEN"]
 }
 
+variable api_name {
+  type = string
+}
+
 variable lambda_function_name {
   type    = string
-  default = "slack-secret-message"
+}
+
+variable route53_hosted_zone {
+  type    = string
+  default = ""
+}
+
+variable domain_name {
+  type    = string
+  default = ""
+}
+
+variable region {
+  type    = string
+  default = "eu-west-2"
 }

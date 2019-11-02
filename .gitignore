@@ -2,3 +2,4 @@ node_modules/
 .terraform
 *.tfstate*
 dist/lambda.zip
+terraform.tfvars
