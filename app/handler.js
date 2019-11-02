@@ -25,7 +25,7 @@ app.command(`/${command}`, ({ ack, payload, context }) => {
         callback_id: 'send_message',
         title: {
           type: 'plain_text',
-          text: 'Encrypted message'
+          text: 'Send a secret message'
         },
         blocks: [
           {
@@ -33,14 +33,14 @@ app.command(`/${command}`, ({ ack, payload, context }) => {
             block_id: 'users',
             label: {
               type: 'plain_text',
-              text: 'Pick users from the list'
+              text: 'Pick a recipient from the list'
             },
             element: {
               action_id: 'user_select',
               type: 'users_select',
               placeholder: {
                 type: 'plain_text',
-                text: 'Select users'
+                text: 'Select user'
               }
             }
           },
@@ -49,7 +49,7 @@ app.command(`/${command}`, ({ ack, payload, context }) => {
             block_id: 'message',
             label: {
               type: 'plain_text',
-              text: 'hello'
+              text: 'Enter your message'
             },
             element: {
               type: 'plain_text_input',
@@ -60,7 +60,7 @@ app.command(`/${command}`, ({ ack, payload, context }) => {
         ],
         submit: {
           type: 'plain_text',
-          text: 'Send'
+          text: 'Send message'
         }
       }
     })
