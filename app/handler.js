@@ -15,6 +15,7 @@ const app = new App({
 const command = process.env.COMMAND || 'secret-message';
 const sharelock_base_path = process.env.SHARELOCK_BASE_PATH || 'https://sharelock.io'
 const send_message_callback = 'send_message';
+const url_visit_callback = 'url_visit';
 
 app.command(`/${command}`, ({ ack, payload, context }) => {
   app.client.views
@@ -97,7 +98,7 @@ app.view(send_message_callback, ({ ack, body, view, context }) => {
                   },
                   accessory: {
                     type: 'button',
-                    action_id: 'url_visit',
+                    action_id: url_visit_callback,
                     text: {
                       type: 'plain_text',
                       text: 'View message'
@@ -112,7 +113,7 @@ app.view(send_message_callback, ({ ack, body, view, context }) => {
   });
 });
 
-app.event('url_visit', ({ ack }) => {
+app.event(url_visit_callback, ({ ack }) => {
   ack();
 });
 
