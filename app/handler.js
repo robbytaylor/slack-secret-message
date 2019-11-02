@@ -14,6 +14,7 @@ const app = new App({
 
 const command = process.env.COMMAND || 'secret-message';
 const sharelock_base_path = process.env.SHARELOCK_BASE_PATH || 'https://sharelock.io'
+const send_message_callback = 'send_message';
 
 app.command(`/${command}`, ({ ack, payload, context }) => {
   app.client.views
@@ -22,7 +23,7 @@ app.command(`/${command}`, ({ ack, payload, context }) => {
       trigger_id: payload.trigger_id,
       view: {
         type: 'modal',
-        callback_id: 'send_message',
+        callback_id: send_message_callback,
         title: {
           type: 'plain_text',
           text: 'Send a secret message'
@@ -67,7 +68,7 @@ app.command(`/${command}`, ({ ack, payload, context }) => {
     .then(() => ack());
 });
 
-app.view('send_message', ({ ack, body, view, context }) => {
+app.view(send_message_callback, ({ ack, body, view, context }) => {
   const userId = view.state.values.users.user_select.selected_user;
   const message = view.state.values.message.message_input.value;
 
@@ -89,19 +90,19 @@ app.view('send_message', ({ ack, body, view, context }) => {
               token: context.botToken,
               blocks: [
                 {
-                  "type": "section",
-                  "text": {
-                    "type": "plain_text",
-                    "text": `<@${body.user.name}> has sent you a secret message`
+                  type: 'section',
+                  text: {
+                    type: 'plain_text',
+                    text: `<@${body.user.name}> has sent you a secret message`
                   },
-                  "accessory": {
-                    "type": "button",
-                    "action_id": "url_visit",
-                    "text": {
-                      "type": "plain_text",
-                      "text": "View message"
+                  accessory: {
+                    type: 'button',
+                    action_id: 'url_visit',
+                    text: {
+                      type: 'plain_text',
+                      text: 'View message'
                     },
-                    "url": url
+                    url: url
                   }
               }
               ]
