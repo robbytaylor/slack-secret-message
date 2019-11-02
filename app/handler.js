@@ -13,6 +13,7 @@ const app = new App({
 });
 
 const command = process.env.COMMAND || 'secret-message';
+const sharelock_base_path = process.env.SHARELOCK_BASE_PATH || 'https://sharelock.io'
 
 app.command(`/${command}`, ({ ack, payload, context }) => {
   app.client.views
@@ -75,12 +76,12 @@ app.view('send_message', ({ ack, body, view, context }) => {
   app.client.users.profile.get({user: userId})
     .then(result => {
       axios
-        .post('https://sharelock.io/create', {
+        .post(`${sharelock_base_path}/create`, {
           a: result.profile.email,
           d: message
         })
         .then(response => {
-          const url = 'https://sharelock.io' + response.data;
+          const url = sharelock_base_path + response.data;
 
           app.client.chat
             .postMessage({
