@@ -92,7 +92,7 @@ app.view('send_message', ({ ack, body, view, context }) => {
                   "type": "section",
                   "text": {
                     "type": "plain_text",
-                    "text": `<@${body.user.name}> has sent you an encrypted message`
+                    "text": `<@${body.user.name}> has sent you a secret message`
                   },
                   "accessory": {
                     "type": "button",
