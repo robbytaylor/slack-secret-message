@@ -48,6 +48,6 @@ resource "aws_acm_certificate_validation" "cert" {
 resource "aws_api_gateway_base_path_mapping" "mapping" {
   count       = var.domain_name != "" ? 1 : 0
   api_id      = aws_api_gateway_rest_api.api.id
-  stage_name  = aws_api_gateway_stage.prod.stage_name
+  stage_name  = aws_api_gateway_stage.stage.stage_name
   domain_name = aws_api_gateway_domain_name.api[0].domain_name
 }

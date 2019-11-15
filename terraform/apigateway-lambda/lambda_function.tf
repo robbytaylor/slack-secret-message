@@ -1,7 +1,7 @@
 data "archive_file" "lambda" {
   type        = "zip"
-  source_dir  = "${path.root}/../app"
-  output_path = "${path.root}/../dist/lambda.zip"
+  output_path = "${path.module}/dist/lambda.zip"
+  source_dir  = "${path.module}/placeholders/${var.lambda_runtime}"
 }
 
 resource "aws_lambda_function" "lambda" {
@@ -11,14 +11,12 @@ resource "aws_lambda_function" "lambda" {
   handler       = var.lambda_handler
   runtime       = var.lambda_runtime
 
-  source_code_hash = data.archive_file.lambda.output_base64sha256
+  lifecycle {
+    ignore_changes = ["last_modified", "source_code_hash"]
+  }
 
   environment {
-    variables = {
-      "SLACK_SIGNING_SECRET" : local.slack_signing_secret
-      "SLACK_BOT_TOKEN" : local.slack_bot_token
-      "SLACK_OAUTH_TOKEN" : local.slack_oauth_token
-    }
+    variables = var.environment_variables
   }
 }
 
