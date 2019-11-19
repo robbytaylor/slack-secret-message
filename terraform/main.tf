@@ -5,7 +5,7 @@ module "apigateway" {
   lambda_function_name = var.lambda_function_name
   domain_name          = var.domain_name
   route53_hosted_zone  = var.route53_hosted_zone
-  http_method          = "POST"
+  http_methods         = ["GET", "POST"]
 
   providers = {
     aws     = "aws"
@@ -14,7 +14,9 @@ module "apigateway" {
 
   environment_variables = {
     "SLACK_SIGNING_SECRET" : local.slack_signing_secret
-    "SLACK_BOT_TOKEN" : local.slack_bot_token
-    "SLACK_OAUTH_TOKEN" : local.slack_oauth_token
+    "SLACK_CLIENT_ID" : local.slack_client_id
+    "SLACK_CLIENT_SECRET" : local.slack_client_secret
+    "SLACK_SCOPES" : "bot,commands,users:read.email,users.profile:read,users:read"
+    "TABLE_NAME" : aws_dynamodb_table.teams.name
   }
 }
