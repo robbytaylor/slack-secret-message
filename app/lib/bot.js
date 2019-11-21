@@ -47,6 +47,7 @@ module.exports = app => {
               .postMessage({
                 channel: userId,
                 token: context.botToken,
+                as_user: true,
                 blocks: [
                   {
                     type: 'section',
