@@ -1,8 +1,8 @@
 # Slack Secret Message
 
-This is a Slack app to easily generate [Sharelock.io](https://sharelock.io) links from within Slack.s
+This is a Slack app to easily generate [Sharelock.io](https://sharelock.io) links from within Slack.
 
-This allows you to share secrets without leaving Slack.
+This allows you to share secrets without leaving Slack by using a `/secret-message` command.
 
 ## Installation
 
