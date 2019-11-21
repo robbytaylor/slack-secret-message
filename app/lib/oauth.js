@@ -11,7 +11,7 @@ module.exports.install = (app, slack) => {
       const payload = request.query;
 
       if (!payload.code) {
-        return response.redirect(installUrl);
+        return response.redirect(302, installUrl);
       }
 
       return slack.oauth
@@ -33,7 +33,7 @@ module.exports.install = (app, slack) => {
           const test = slack.auth.test({ token: data.access_token });
 
           Promise.all([save, test]).then(results => {
-            response.redirect(results[1].url);
+            response.redirect(302, results[1].url);
           });
         })
         .catch(error => {
@@ -43,7 +43,7 @@ module.exports.install = (app, slack) => {
 
   app.route('/install')
     .get((request, response) => {
-      response.redirect(installUrl);
+      response.redirect(302, installUrl);
     })
 }
 
