@@ -1,5 +1,5 @@
 node_modules/
 .terraform
 *.tfstate*
-dist/lambda.zip
+lambda.zip
 terraform.tfvars

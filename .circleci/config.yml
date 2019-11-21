@@ -19,7 +19,7 @@ jobs:
           at: ~/
       - run:
           name: Package
-          command: cd app && zip ../dist/lambda.zip -r ./*
+          command: cd app && zip ../lambda.zip -r ./*
       - persist_to_workspace:
           root: ~/
           paths: project
@@ -37,7 +37,7 @@ jobs:
             echo 'export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}' >> $BASH_ENV
             echo 'export AWS_REGION=${AWS_REGION}' >> $BASH_ENV
             source $BASH_ENV
-            aws lambda update-function-code --zip-file fileb://dist/lambda.zip --function-name ${FUNCTION_NAME} > /dev/null
+            aws lambda update-function-code --zip-file fileb://lambda.zip --function-name ${FUNCTION_NAME} > /dev/null
 
 workflows:
   version: 2
