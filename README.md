@@ -19,3 +19,7 @@ I have not interest in keeping your secrets.
 
 When a user uses the app to send a message to another user the recipients email address is retreived via the Slack API.
 The recipients email address is submitted to Sharelock.io, alongisde the message, to authenicate the recipient so that only they can view the message.
+
+## Support
+
+For support [open an issue](https://github.com/robbytaylor/slack-secret-message/issues) or email slack-secret-message@robbytaylor.co.uk.
