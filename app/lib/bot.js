@@ -22,6 +22,8 @@ module.exports = app => {
     const userId = view.state.values.users.user_select.selected_user;
     const message = view.state.values.message.message_input.value;
 
+    app.client.token = context.botToken;
+
     app.client.users.profile.get({ user: userId })
       .then(result => {
         const profile = result.profile;
@@ -47,6 +49,7 @@ module.exports = app => {
               .postMessage({
                 channel: userId,
                 token: context.botToken,
+                as_user: true,
                 blocks: [
                   {
                     type: 'section',
