@@ -22,7 +22,7 @@ module.exports = app => {
     const userId = view.state.values.users.user_select.selected_user;
     const message = view.state.values.message.message_input.value;
 
-    app.client.token = context.botToken;
+    app.client.token = context.userToken;
 
     app.client.users.profile.get({ user: userId })
       .then(result => {
