@@ -49,7 +49,7 @@ module.exports = app => {
               .postMessage({
                 channel: userId,
                 token: context.botToken,
-                as_user: true,
+                username: "Secret Message",
                 blocks: [
                   {
                     type: 'section',
