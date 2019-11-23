@@ -4,6 +4,10 @@ This is a Slack app to easily generate [Sharelock.io](https://sharelock.io) link
 
 This allows you to share secrets without leaving Slack by using a `/secret-message` command.
 
+Sharelock requires users to login to view secrets to ensure they can only be read by the intended recipient.
+Login via Google or Facebook is currently supported by Slack is not.
+In the near future I intend to update this app to support Slack login for viewing secrets to make the process seamless.
+
 ## Installation
 
 Install the app to your Slack workspace by following the link below.
