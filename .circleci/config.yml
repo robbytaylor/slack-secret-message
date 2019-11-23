@@ -73,7 +73,12 @@ workflows:
             - package
   build-and-deploy-production:
     jobs:
-      - build
+      - build:
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
       - package:
           filters:
             tags:
