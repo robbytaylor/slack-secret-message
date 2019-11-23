@@ -9,6 +9,12 @@ variable api_name {
   type = string
 }
 
+variable command {
+  type        = string
+  default     = "secret-message"
+  description = "The command used to send a secret message"
+}
+
 variable lambda_function_name {
   type = string
 }
