@@ -19,6 +19,11 @@ variable lambda_function_name {
   type = string
 }
 
+variable secret_name {
+  type        = string
+  description = "The Secrets Manager secret containing the Slack credentials"
+}
+
 variable lambda_handler {
   type    = string
   default = "handler.app"
