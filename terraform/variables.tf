@@ -29,6 +29,21 @@ variable command {
   description = "The command used to send a secret message"
 }
 
+variable dynamodb_billing_mode {
+  type    = string
+  default = "PAY_PER_REQUEST"
+}
+
+variable dynamodb_read_capabity {
+  type    = number
+  default = 10
+}
+
+variable dynamodb_write_capabity {
+  type    = number
+  default = 10
+}
+
 variable lambda_handler {
   type    = string
   default = "handler.app"

@@ -1,8 +1,9 @@
 resource "aws_dynamodb_table" "teams" {
   name           = "teams"
   hash_key       = "team_id"
-  read_capacity  = 20
-  write_capacity = 20
+  read_capacity  = var.dynamodb_read_capabity
+  write_capacity = var.dynamodb_write_capabity
+  billing_mode   = var.dynamodb_billing_mode
 
   attribute {
     name = "team_id"
