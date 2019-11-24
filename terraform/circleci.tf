@@ -10,7 +10,7 @@ resource "aws_iam_user" "circleci" {
 }
 
 resource aws_iam_policy update-lambda {
-  name = "UpdateLambda"
+  name = "UpdateLambda-${var.lambda_function_name}"
   policy = data.aws_iam_policy_document.circleci.json
 }
 
