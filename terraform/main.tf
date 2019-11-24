@@ -20,4 +20,6 @@ module "apigateway" {
     "SLACK_SCOPES" : "bot,commands,users:read.email,users.profile:read,users:read,chat:write:bot"
     "TABLE_NAME" : aws_dynamodb_table.teams.name
   }
+
+  tags = var.tags
 }
