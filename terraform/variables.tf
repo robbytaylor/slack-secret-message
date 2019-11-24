@@ -9,12 +9,6 @@ variable api_name {
   type = string
 }
 
-variable command {
-  type        = string
-  default     = "secret-message"
-  description = "The command used to send a secret message"
-}
-
 variable lambda_function_name {
   type = string
 }
@@ -22,6 +16,17 @@ variable lambda_function_name {
 variable secret_name {
   type        = string
   description = "The Secrets Manager secret containing the Slack credentials"
+}
+
+variable circleci_user {
+  type    = string
+  default = "CircleCI"
+}
+
+variable command {
+  type        = string
+  default     = "secret-message"
+  description = "The command used to send a secret message"
 }
 
 variable lambda_handler {

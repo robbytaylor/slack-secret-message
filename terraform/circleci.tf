@@ -6,7 +6,7 @@ data aws_iam_policy_document circleci {
 }
 
 resource "aws_iam_user" "circleci" {
-  name = "CircleCI"
+  name = var.circleci_user
 }
 
 resource aws_iam_policy update-lambda {
