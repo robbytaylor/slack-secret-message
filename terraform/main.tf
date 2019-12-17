@@ -23,3 +23,11 @@ module "apigateway" {
 
   tags = var.tags
 }
+
+module circleci {
+  source       = "robbytaylor/deploy-user/aws"
+  version      = "0.1.0"
+  tags         = var.tags
+  username     = var.circleci_user
+  lambda_arn   = module.apigateway.lambda_arn
+}
